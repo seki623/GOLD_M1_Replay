@@ -81,3 +81,8 @@ function trade(side){let r=S.replay[S.idx];if(!r||S.position)return;S.position={
 function exit(){let r=S.replay[S.idx];if(!r||!S.position)return;let p=S.position,pnl=p.side==="BUY"?r.c-p.price:p.price-r.c;S.trades.push({side:"EXIT",time:r.ts,price:r.c,pnl});S.position=null;log();update();draw()}
 function log(){$("tradeLog").innerHTML=S.trades.map(t=>`<div>${fmt(t.time)}　${t.side}　${price(t.price)}　${t.pnl==null?"":t.pnl.toFixed(2)}</div>`).join("")}
 $("loadBtn").onclick=load;$("playBtn").onclick=()=>S.playing?stop():play();$("stepBtn").onclick=()=>{stop();if(S.idx<S.replay.length-1)S.idx++;update();draw()};$("stepBackBtn").onclick=()=>{stop();if(S.idx>0)S.idx--;update();draw()};$("progress").oninput=e=>{stop();S.idx=+e.target.value;update();draw()};$("buyBtn").onclick=()=>trade("BUY");$("sellBtn").onclick=()=>trade("SELL");$("exitBtn").onclick=exit;$("markBtn").onclick=()=>{let r=S.replay[S.idx];if(r)S.marks.push(r.ts),draw()};$("deleteMarkBtn").onclick=()=>{S.marks.pop();draw()};$("clearMarksBtn").onclick=()=>{S.marks=[];draw()};["candleToggle","levelToggle","indicatorToggle"].forEach(id=>$(id).onchange=draw);onresize=resize;resize();
+(function defaults(){
+  const now=new Date(), p=n=>String(n).padStart(2,"0");
+  $("startInput").value=`${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}T08:00`;
+  $("endInput").value=`${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
+})();
